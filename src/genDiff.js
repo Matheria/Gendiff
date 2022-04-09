@@ -9,28 +9,29 @@ const readFile = (pathToFile) => {
   return data;
 };
 
-const genDiff = (pathToFile1, pathToFile2) => {
-  const data1 = JSON.parse(readFile(pathToFile1));
-  const data2 = JSON.parse(readFile(pathToFile2));
+const genDiff = (filepath1, filepath2) => {
+  const data1 = JSON.parse(readFile(filepath1));
+  const data2 = JSON.parse(readFile(filepath2));
   const keys = Object.keys({ ...data1, ...data2 }).sort();
   let result = '{\n';
 
-  for (const key of keys) {
+
+  keys.forEach((key) => {              
     const key1 = data1[key];
     const key2 = data2[key];
-
-    if (_.has(data1, key)) {
-      return result += `  - ${key}: ${key1}\n`;
-    }
-
-    if (_.has(data2, key)) {
-      return result += `  + ${key}: ${key2}\n`;
-    }
 
     if (key1 === key2) {
       return result += `    ${key}: ${key1}\n`;
     }
-  }
+
+    if (_.has(data1, key)) {
+      result += `  - ${key}: ${key1}\n`;
+    }
+
+    if (_.has(data2, key)) {
+      result += `  + ${key}: ${key2}\n`;
+    }
+  });
 
   result += '}';
 
