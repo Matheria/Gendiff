@@ -7,7 +7,7 @@
   },
   "main": "src/genDiff.js",
   "scripts": {
-    "test": "npx -n --experimental-vm-modules jest"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
