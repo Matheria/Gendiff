@@ -7,7 +7,7 @@
   },
   "main": "src/genDiff.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx -n --experimental-vm-modules jest"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,10 @@
     "url": "https://github.com/Matheria/frontend-project-lvl2/issues"
   },
   "homepage": "https://github.com/Matheria/frontend-project-lvl2#readme",
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
   "dependencies": {
     "commander": "^9.0.0",
     "lodash": "^4.17.21"
