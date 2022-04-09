@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 
-const readFile = (pathToFile) => {
-  const fullPathToFile = path.resolve(process.cwd(), pathToFile);
-  const file = fs.readFileSync(fullPathToFile, 'utf-8');
+const readFile = (filepath) => {
+  const fullPath = path.resolve(process.cwd(), filepath);
+  const file = fs.readFileSync(fullPath, 'utf-8');
 
   return file;
 };
