@@ -15,13 +15,13 @@ const genDiff = (filepath1, filepath2) => {
   const keys = Object.keys({ ...data1, ...data2 }).sort();
   let result = '{\n';
 
-
-  keys.forEach((key) => {              
+  keys.forEach((key) => {
     const key1 = data1[key];
     const key2 = data2[key];
 
     if (key1 === key2) {
-      return result += `    ${key}: ${key1}\n`;
+      result += `    ${key}: ${key1}\n`;
+      return;
     }
 
     if (_.has(data1, key)) {
@@ -35,7 +35,7 @@ const genDiff = (filepath1, filepath2) => {
 
   result += '}';
 
-  return result;   
+  return result;
 };
 
 export default genDiff;
