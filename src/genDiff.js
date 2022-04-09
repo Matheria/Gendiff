@@ -4,9 +4,9 @@ import _ from 'lodash';
 
 const readFile = (pathToFile) => {
   const fullPathToFile = path.resolve(process.cwd(), pathToFile);
-  const data = fs.readFileSync(fullPathToFile, 'utf-8');
+  const file = fs.readFileSync(fullPathToFile, 'utf-8');
 
-  return data;
+  return file;
 };
 
 const genDiff = (filepath1, filepath2) => {
