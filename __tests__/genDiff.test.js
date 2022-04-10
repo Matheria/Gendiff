@@ -15,3 +15,9 @@ test('Flat json-files comparsion', () => {
   const result = genDiff('__fixtures__/file1.json', '__fixtures__/file2.json');
   expect(result).toEqual(expectedResult);
 });
+
+test('Flat yml-files comparsion', () => {
+  const expectedResult = readFixture('expected_file.txt');
+  const result = genDiff('__fixtures__/file1.yml', '__fixtures__/file2.yml');
+  expect(result).toEqual(expectedResult);
+});
