@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import fileParse from './parsers.js';
+import stylishFormatter from './formatters/stylish.js';
 
 const readFile = (filepath) => {
   const fullPath = path.resolve(process.cwd(), filepath);
