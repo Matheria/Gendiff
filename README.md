@@ -11,3 +11,7 @@
 ## Two flat yaml-files comparsion
 
 [![asciicast](https://asciinema.org/a/aIMcmrsrPpJ8vMK1eiXHrwe2Y.svg)](https://asciinema.org/a/aIMcmrsrPpJ8vMK1eiXHrwe2Y)
+
+## Nested structures (JSON & YAML)
+
+[![asciicast](https://asciinema.org/a/DmH0UvobeY44AQGlyfcb5bLon.svg)](https://asciinema.org/a/DmH0UvobeY44AQGlyfcb5bLon)
