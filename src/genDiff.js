@@ -16,31 +16,39 @@ const genDiff = (filepath1, filepath2) => {
   const fileExtension2 = path.extname(filepath2);
   const parsedFile1 = fileParse(readFile(filepath1), fileExtension1);
   const parsedFile2 = fileParse(readFile(filepath2), fileExtension2);
-  const keys = Object.keys({ ...parsedFile1, ...parsedFile2 }).sort();
 
-  let result = '{\n';
+  const iter = (obj1, obj2) => {
+    const keys = Object.keys({ ...obj1, ...obj2 }).sort();
 
-  keys.forEach((key) => {
-    const key1 = parsedFile1[key];
-    const key2 = parsedFile2[key];
+    return keys.reduce((acc, key) => {
+      const value1 = obj1[key];
+      const value2 = obj2[key];
 
-    if (key1 === key2) {
-      result += `    ${key}: ${key1}\n`;
-      return;
-    }
+      if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
+        acc.push({ key, value: iter(value1, value2), hasChildren: true });
+        return acc;
+      }
 
-    if (_.has(parsedFile1, key)) {
-      result += `  - ${key}: ${key1}\n`;
-    }
+      if (value1 === value2) {
+        acc.push({ key, status: 'unchanged', value: value1 });
+        return acc;
+      }
 
-    if (_.has(parsedFile2, key)) {
-      result += `  + ${key}: ${key2}\n`;
-    }
-  });
+      if (_.has(obj1, key)) {
+        acc.push({ key, status: 'deleted', value: value1 });
+      }
 
-  result += '}';
+      if (_.has(obj2, key)) {
+        acc.push({ key, status: 'added', value: value2 });
+      }
 
-  return result;
+      return acc;
+    }, []);
+  };
+
+  const ast = iter(parsedFile1, parsedFile2);
+
+  return stylishFormatter(ast);
 };
 
 export default genDiff;
