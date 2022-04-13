@@ -2,11 +2,16 @@ import stylishFormatter from './stylish.js';
 import plainFormatter from './plain.js';
 
 const changeFormatter = (diff, format) => {
-  if (format === 'plain') {
-    return plainFormatter(diff);
+  switch (format) {
+    case 'plain':
+      return plainFormatter(diff);
+    case 'json':
+      return JSON.stringify(diff);
+    case 'stylish':
+      return stylishFormatter(diff);
+    default:
+      throw new Error(`${format} not supported`);
   }
-
-  return stylishFormatter(diff);
 };
 
 export default changeFormatter;
