@@ -12,6 +12,10 @@
 
 [![asciicast](https://asciinema.org/a/aIMcmrsrPpJ8vMK1eiXHrwe2Y.svg)](https://asciinema.org/a/aIMcmrsrPpJ8vMK1eiXHrwe2Y)
 
-## Nested structures (JSON & YAML)
+## Nested structures (JSON & YAML) in stylish format
 
 [![asciicast](https://asciinema.org/a/DmH0UvobeY44AQGlyfcb5bLon.svg)](https://asciinema.org/a/DmH0UvobeY44AQGlyfcb5bLon)
+
+## Nested structures (JSON & YAML) in plain format
+
+[![asciicast](https://asciinema.org/a/U2hYbAqHbK2mZN7nv48KXsOtr.svg)](https://asciinema.org/a/U2hYbAqHbK2mZN7nv48KXsOtr)
