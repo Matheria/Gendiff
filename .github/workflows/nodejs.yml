@@ -1,4 +1,4 @@
-name: Node CI
+name: Linter check and test
 
 on:
   - push
