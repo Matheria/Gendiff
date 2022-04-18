@@ -11,14 +11,16 @@ const readFile = (filepath) => {
   return file;
 };
 
-const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
-  const fileExtension1 = path.extname(filepath1);
-  const fileExtension2 = path.extname(filepath2);
-  const parsedFile1 = fileParse(readFile(filepath1), fileExtension1);
-  const parsedFile2 = fileParse(readFile(filepath2), fileExtension2);
-  const buildAst = buildDiffTree(parsedFile1, parsedFile2);
+const getFileFormat = (filepath) => path.extname(filepath).slice(1);
 
-  return changeFormatter(buildAst, formatName);
+const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
+  const fileFormat1 = getFileFormat(filepath1);
+  const fileFormat2 = getFileFormat(filepath2);
+  const parsedFile1 = fileParse(readFile(filepath1), fileFormat1);
+  const parsedFile2 = fileParse(readFile(filepath2), fileFormat2);
+  const diffTree = buildDiffTree(parsedFile1, parsedFile2);
+
+  return changeFormatter(diffTree, formatName);
 };
 
 export default genDiff;
