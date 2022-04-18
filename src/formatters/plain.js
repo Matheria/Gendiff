@@ -1,11 +1,5 @@
 import _ from 'lodash';
 
-const STATUS_MAP = {
-  added: 'added',
-  deleted: 'removed',
-  updated: 'updated',
-};
-
 const stringify = (value) => {
   if (typeof value === 'string') {
     return `'${value}'`;
@@ -18,43 +12,22 @@ const stringify = (value) => {
   return value;
 };
 
-const plainFormatter = (diff) => {
-  const iter = (ast, path = []) => {
-    const changedItems = ast.filter(({ status }) => status !== 'unchanged');
+const mapping = {
+  nested: (path, { value }, fn) => fn(value, path),
+  added: (path, { value }) => `Property '${path.join('.')}' was added with value: ${stringify(value)}`,
+  deleted: (path) => `Property '${path.join('.')}' was removed`,
+  unchanged: () => [],
+  updated: (path, { value, oldValue }) => `Property '${path.join('.')}' was updated. From ${stringify(oldValue)} to ${stringify(value)}`,
+};
 
-    const result = changedItems.flatMap((item) => {
-      const {
-        key,
-        value,
-        oldValue,
-        status,
-        hasChildren,
-      } = item;
+const plainFormatter = (ast, path = []) => {
+  const result = ast.flatMap((item) => {
+    const newPath = [...path, item.key];
 
-      const newPath = [...path];
-      newPath.push(key);
+    return mapping[item.type](newPath, item, plainFormatter);
+  });
 
-      if (hasChildren) {
-        return iter(value, newPath);
-      }
-
-      let resultString = `Property '${newPath.join('.')}' was ${STATUS_MAP[status]}`;
-
-      if (status === 'updated') {
-        resultString += `. From ${stringify(oldValue)} to ${stringify(value)}`;
-      }
-
-      if (status === 'added') {
-        resultString += ` with value: ${stringify(value)}`;
-      }
-
-      return resultString;
-    });
-
-    return result.join('\n');
-  };
-
-  return iter(diff);
+  return result.join('\n');
 };
 
 export default plainFormatter;

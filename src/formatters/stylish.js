@@ -2,50 +2,37 @@ import _ from 'lodash';
 
 const INDENT = ' '.repeat(4);
 
-const STATUS_MAP = {
-  added: '+',
-  deleted: '-',
-};
-
 const getIndent = (depth) => INDENT.repeat(depth);
 
-const getSymbol = (status) => {
-  if (!_.has(STATUS_MAP, status)) {
-    return ' ';
+const stringify = (data, depth) => {
+  if (_.isPlainObject(data)) {
+    const entries = Object.entries(data);
+
+    const result = entries.map(([key, value]) => `${getIndent(depth + 1)}    ${key}: ${stringify(value, depth + 1)}`);
+
+    return `{\n${result.join('\n')}\n${getIndent(depth + 1)}}`;
   }
 
-  return STATUS_MAP[status];
+  return data;
 };
 
-const transformObject = (obj) => {
-  const entries = Object.entries(obj);
+const mapping = {
+  nested: ({ key, value }, depth, fn) => `${getIndent(depth)}    ${key}: ${fn(value, depth + 1)}`,
+  added: ({ key, value }, depth) => `${getIndent(depth)}  + ${key}: ${stringify(value, depth)}`,
+  deleted: ({ key, value }, depth) => `${getIndent(depth)}  - ${key}: ${stringify(value, depth)}`,
+  unchanged: ({ key, value }, depth) => `${getIndent(depth)}    ${key}: ${stringify(value, depth)}`,
+  updated: ({ key, value, oldValue }, depth) => {
+    const data1 = `${getIndent(depth)}  - ${key}: ${stringify(oldValue, depth)}`;
+    const data2 = `${getIndent(depth)}  + ${key}: ${stringify(value, depth)}`;
 
-  return entries.map(([key, value]) => ({ key, value }));
+    return [data1, data2];
+  },
 };
 
-const stylishFormatter = (diff) => {
-  const stylish = (ast, depth = 0) => {
-    let result = '{\n';
+const stylishFormatter = (ast, depth = 0) => {
+  const result = ast.flatMap((item) => mapping[item.type](item, depth, stylishFormatter));
 
-    const newAst = _.isPlainObject(ast) ? transformObject(ast) : [...ast];
-
-    newAst.forEach((item) => {
-      const { key, value, status } = item;
-
-      if (item.hasChildren || _.isPlainObject(value)) {
-        result += `${getIndent(depth)}  ${getSymbol(status)} ${key}: ${stylish(value, depth + 1)}\n`;
-        return;
-      }
-
-      result += `${getIndent(depth)}  ${getSymbol(status)} ${key}: ${value}\n`;
-    });
-
-    result += `${getIndent(depth)}${'}'}`;
-
-    return result;
-  };
-
-  return stylish(diff);
+  return `{\n${result.join('\n')}\n${getIndent(depth)}}`;
 };
 
 export default stylishFormatter;
