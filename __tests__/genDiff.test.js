@@ -1,6 +1,6 @@
 import path, { dirname } from 'path';
 import fs from 'fs';
-import { test, expect, describe } from '@jest/globals';
+import { test, expect } from '@jest/globals';
 import { fileURLToPath } from 'url';
 import genDiff from '../src/genDiff.js';
 
@@ -8,43 +8,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-const readFixture = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
+const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
-describe('Stylish test', () => {
-  test('Two json-files stylish comparsion', () => {
-    const expectedResult = readFixture('expectedStylish.txt');
-    const result = genDiff('__fixtures__/file1.json', '__fixtures__/file2.json');
-    expect(result).toEqual(expectedResult);
-  });
-  test('Two yml-files stylish comparsion', () => {
-    const expectedResult = readFixture('expectedStylish.txt');
-    const result = genDiff('__fixtures__/file1.yml', '__fixtures__/file2.yml');
-    expect(result).toEqual(expectedResult);
-  });
-});
+const cases = [
+  ['file1.json', 'file2.json', 'expectedStylish.txt', 'stylish'],
+  ['file1.yml', 'file2.yml', 'expectedStylish.txt', 'stylish'],
+  ['file1.json', 'file2.json', 'expectedPlain.txt', 'plain'],
+  ['file1.yml', 'file2.yml', 'expectedPlain.txt', 'plain'],
+  ['file1.json', 'file2.json', 'expectedJson.txt', 'json'],
+  ['file1.yml', 'file2.yml', 'expectedJson.txt', 'json'],
+];
 
-describe('Plain test', () => {
-  test('Two json-files plain comparsion', () => {
-    const expectedResult = readFixture('expectedPlain.txt');
-    const result = genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'plain');
-    expect(result).toEqual(expectedResult);
-  });
-  test('Two yml-files plain comparsion', () => {
-    const expectedResult = readFixture('expectedPlain.txt');
-    const result = genDiff('__fixtures__/file1.yml', '__fixtures__/file2.yml', 'plain');
-    expect(result).toEqual(expectedResult);
-  });
-});
-
-describe('Json test', () => {
-  test('Two json-files json comparsion', () => {
-    const expectedResult = readFixture('expectedJson.txt');
-    const result = genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'json');
-    expect(result).toEqual(expectedResult);
-  });
-  test('Two yml-files json comparsion', () => {
-    const expectedResult = readFixture('expectedJson.txt');
-    const result = genDiff('__fixtures__/file1.yml', '__fixtures__/file2.yml', 'json');
-    expect(result).toEqual(expectedResult);
-  });
+test.each(cases)('Compare %s and %s to expect %s in "%s" style', (firstArg, secondArg, expectedResult, format) => {
+  const filepath1 = getFixturePath(firstArg);
+  const filepath2 = getFixturePath(secondArg);
+  const getResult = readFile(expectedResult);
+  const result = genDiff(filepath1, filepath2, format);
+  expect(result).toEqual(getResult);
 });
