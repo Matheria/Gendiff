@@ -10,7 +10,7 @@ const changeFormatter = (diff, format) => {
     case 'stylish':
       return stylishFormatter(diff);
     default:
-      throw new Error(`${format} not supported`);
+      throw new Error(`Unknown type of format: ${format}`);
   }
 };
 
